@@ -73,7 +73,6 @@ $(function() {
      * container.
     */
     describe('Initial Entries', function() {
-        const feed = document.querySelector('.feed');
         /* Jasmine's beforeEach and done functions are
          * needed to test the asynchronous loadFeed() function.
          */
@@ -85,7 +84,8 @@ $(function() {
          * to verify there are entries present.
          */
         it('has at least one entry within the feed container', function() {
-            expect(feed.children.length > 0).toBe(true);
+            const feedEntries = document.querySelectorAll('.feed .entry');
+            expect(feedEntries.length > 0).toBe(true);
         });
     });
     /* Test suite to ensure that when a new feed is loaded 
@@ -93,27 +93,42 @@ $(function() {
      */ 
     describe('New Feed Selection', function() {
         const feed = document.querySelector('.feed'), // grabs the feed
-            feedArray = []; // empty array where we'll push feed entries
-
+            feedArray = [], // empty array where we'll push Feed 0 entries
+            feedArrayNew = []; // empty array where we'll push Feed 1 entries
+            
         /* Jasmine's beforeEach and done functions are
          * needed to test the asynchronous loadFeed() function.
          */
         beforeEach(function(done) {
-            loadFeed(0);
-                /* Push entries from first feed into feedArray
+            loadFeed(0, function() {
+                /* Feed 0 done loading
+                 * Push Feed 0 into feedArray
+                 */ 
+                Array.from(feed.children).forEach(function(entry) {
+                    feedArray.push(entry.innerText);
+                })
+            });
+
+            loadFeed(1, function() {
+                /* Feed 1 done loading
+                 * Push Feed 1 into feedArrayNew
                  */
                 Array.from(feed.children).forEach(function(entry) {
-                    feedArray.push(entry.innerText)});
-            loadFeed(1, done);
+                    feedArrayNew.push(entry.innerText);
+                })
+
+            });
+            /* All variables initialized
+             * Can begin testing
+             */
+            done();
         });
         it('has content that changes', function() {
-            /* Test entries from the second feed against 
-             * those from the first feed (within feedArray)
+            /* Test entries from the first feed against 
+             * those from the second feed
              * to make sure they've changed.
              */
-            Array.from(feed.children).forEach(function(entry, index) {
-                expect(entry.innerText === feedArray[index]).toBe(false);
+            expect(feedArray === feedArrayNew).toBe(false);
             });
-        });
     });
-}());
+});
