@@ -92,43 +92,40 @@ $(function() {
      * by the loadFeed function, the content actually changes.
      */ 
     describe('New Feed Selection', function() {
-        const feed = document.querySelector('.feed'), // grabs the feed
-            feedArray = [], // empty array where we'll push Feed 0 entries
-            feedArrayNew = []; // empty array where we'll push Feed 1 entries
+        const feed = document.querySelector('.feed'); // grabs the feed
+ 
             
         /* Jasmine's beforeEach and done functions are
          * needed to test the asynchronous loadFeed() function.
          */
         beforeEach(function(done) {
+            /* Load first feed
+            */
             loadFeed(0, function() {
-                /* Feed 0 done loading
-                 * Push Feed 0 into feedArray
-                 */ 
-                Array.from(feed.children).forEach(function(entry) {
-                    feedArray.push(entry.innerText);
-                })
-            });
-
-            loadFeed(1, function() {
-                /* Feed 1 done loading
-                 * Push Feed 1 into feedArrayNew
+                /* First feed done loading, 
+                 * store contents of first feed
                  */
-                Array.from(feed.children).forEach(function(entry) {
-                    feedArrayNew.push(entry.innerText);
-                })
-
+                firstFeed = feed.innerText;
+                /* Load second feed
+                */
+                loadFeed(1, function() {
+                    /* Second feed done loading, 
+                     * store contents of second feed
+                     */
+                    secondFeed = feed.innerText;
+                    /* Variables initialized, call done() and begin testing
+                    */
+                   done();
+                });
             });
-            /* All variables initialized
-             * Can begin testing
-             */
-            done();
+
         });
         it('has content that changes', function() {
-            /* Test entries from the first feed against 
+            /* Test contents from the first feed against 
              * those from the second feed
-             * to make sure they've changed.
+             * to make sure they're different
              */
-            expect(feedArray === feedArrayNew).toBe(false);
+            expect(firstFeed).not.toBe(secondFeed);
             });
     });
 });
