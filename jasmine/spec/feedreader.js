@@ -46,7 +46,7 @@ $(function() {
          * body classList.
          */
         it('should be hidden by default', function() {
-            expect(body.classList).toContain('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).toBe(true);
         });
         /* This test ensures the menu changes
          * visibility when the menu icon is clicked.
@@ -58,13 +58,13 @@ $(function() {
              * from body to reveal the menu.
              */
             menu.click();
-            expect(body.classList).not.toContain('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).not.toBe(true);
             /* On the second click of the menu icon,
              * the menu-hidden class should be added to body
              * to hide the menu.
              */
             menu.click();
-            expect(body.classList).toContain('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).toBe(true);
         });
     });
     
@@ -93,8 +93,6 @@ $(function() {
      */ 
     describe('New Feed Selection', function() {
         const feed = document.querySelector('.feed'); // grabs the feed
- 
-            
         /* Jasmine's beforeEach and done functions are
          * needed to test the asynchronous loadFeed() function.
          */
@@ -105,14 +103,14 @@ $(function() {
                 /* First feed done loading, 
                  * store contents of first feed
                  */
-                firstFeed = feed.innerText;
+                firstFeed = feed.innerHTML;
                 /* Load second feed
                 */
                 loadFeed(1, function() {
                     /* Second feed done loading, 
                      * store contents of second feed
                      */
-                    secondFeed = feed.innerText;
+                    secondFeed = feed.innerHTML;
                     /* Variables initialized, call done() and begin testing
                     */
                    done();
